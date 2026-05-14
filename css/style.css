@@ -1,0 +1,548 @@
+/* ══════════════════════════════════
+   APP SHELL
+══════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;
+  --surface:#1a1d27;
+  --card-bg:#1e2130;
+  --border:#2d3250;
+  --accent:#4f6ef7;
+  --accent2:#7c5cbf;
+  --text:#e8eaf6;
+  --text2:#8b8fa8;
+  --white:#fff;
+  --success:#34c88a;
+  --r:14px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ── Header ── */
+.app-header{
+  background:linear-gradient(135deg,var(--surface) 0%,#161929 100%);
+  background: #4e54c8;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #8f94fb, #4e54c8);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #8f94fb, #4e54c8); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  border-bottom:1px solid var(--border);
+  padding:1.2rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(10px);
+}
+.app-title{
+  display:flex;align-items:center;gap:.75rem;
+}
+.app-title .logo{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:800;color:#fff;flex-shrink:0;
+}
+.app-title h1{font-size:1.15rem;font-weight:700;color:var(--text)}
+.app-title p{font-size:.75rem;color:var(--white);margin-top:.1rem}
+.header-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+
+/* ── Boutons globaux ── */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem 1.1rem;border-radius:8px;
+  font-size:.8rem;font-weight:600;cursor:pointer;
+  border:none;transition:all .2s;white-space:nowrap;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#3d5ef0;transform:translateY(-1px)}
+.btn-secondary{background:var(--card-bg);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface);border-color:var(--accent)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{background:#28b87e;transform:translateY(-1px)}
+.btn-danger{background:#e05252;color:#fff}
+.btn-danger:hover{background:#cc3d3d}
+.btn-sm{padding:.4rem .8rem;font-size:.72rem}
+.btn svg{flex-shrink:0}
+
+/* ══════════════════════════════════
+   LAYOUT
+══════════════════════════════════ */
+.app-layout{
+  display:grid;
+  grid-template-columns:400px 1fr;
+  min-height:calc(100vh - 68px);
+}
+
+/* ── Panel formulaire ── */
+.form-panel{
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  max-height:calc(100vh - 68px);
+  position:sticky;top:68px;
+}
+.form-panel::-webkit-scrollbar{width:4px}
+.form-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.panel-tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;background:var(--surface);
+}
+.panel-tab{
+  flex:1;padding:.85rem .5rem;font-size:.78rem;font-weight:600;
+  color:var(--text2);background:none;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;
+}
+.panel-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.panel-tab:hover:not(.active){color:var(--text)}
+
+.form-section{
+  padding:1.5rem;display:none;
+}
+.form-section.active{display:block}
+
+/* ── Groupes de champs ── */
+.field-group{margin-bottom:1.25rem}
+.field-label{
+  display:block;font-size:.72rem;font-weight:600;
+  color:var(--text2);text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:.5rem;
+}
+.field-input,.field-select{
+  width:100%;background:var(--card-bg);
+  border:1px solid var(--border);border-radius:8px;
+  padding:.65rem .9rem;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:.88rem;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.field-input:focus,.field-select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(79,110,247,.15);
+}
+.field-input::placeholder{color:var(--text2);opacity:.6}
+.field-select option{background:var(--card-bg);color:var(--text)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+/* Photo upload */
+.photo-upload{
+  position:relative;
+  width:120px;height:150px;
+  border-radius:8px;
+  border:2px dashed var(--border);
+  background:var(--card-bg);
+  cursor:pointer;overflow:hidden;
+  transition:border-color .2s;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:.4rem;
+}
+.photo-upload:hover{border-color:var(--accent)}
+.photo-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-upload img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.photo-placeholder{text-align:center;pointer-events:none}
+.photo-placeholder svg{color:var(--text2);margin-bottom:.3rem}
+.photo-placeholder span{font-size:.7rem;color:var(--text2)}
+
+/* Signature upload */
+.sig-upload{
+  width:100%;height:70px;
+  border-radius:8px;
+  border:2px dashed var(--border);
+  background:var(--card-bg);
+  cursor:pointer;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s;
+}
+.sig-upload:hover{border-color:var(--accent)}
+.sig-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.sig-upload img{max-width:100%;max-height:60px;object-fit:contain}
+
+/* Divider section */
+.divider-title{
+  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--text2);border-bottom:1px solid var(--border);
+  padding-bottom:.5rem;margin-bottom:1rem;margin-top:.25rem;
+}
+
+/* ── Panneau prévisualisation ── */
+.preview-panel{
+  background:var(--bg);
+  overflow-y:auto;
+  padding:2.5rem 2rem;
+  display:flex;flex-direction:column;align-items:center;gap:2.5rem;
+}
+
+/* Contrôles de zoom */
+.preview-controls{
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+  justify-content:center;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:50px;
+  padding:.5rem 1.2rem;
+}
+.zoom-btn{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--card-bg);border:1px solid var(--border);
+  color:var(--text);font-size:.9rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.zoom-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.zoom-label{font-size:.78rem;color:var(--text2);font-weight:600;min-width:40px;text-align:center}
+.preview-label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.1em}
+
+/* ══════════════════════════════════
+   CARD FRONT
+══════════════════════════════════ */
+.card-wrapper{
+  transform-origin:top center;
+  transition:transform .25s ease;
+}
+.card-container-label{
+  font-size:.72rem;color:var(--text2);font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;
+  text-align:center;margin-bottom:.75rem;
+}
+
+.id-card{
+  width:1011px;
+  height:638px;
+  border-radius:18px;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);
+  font-family:'Inter',sans-serif;
+}
+
+/* ── Fond sécurité (guillochage) ── */
+.card-bg-security{
+  position:absolute;inset:0;
+  /*background:linear-gradient(135deg,#f8efe6 0%,#f5e8d8 30%,#ede0cc 60%,#f0e6d2 100%);*/
+  background-image: url("../assets/7168127.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.card-bg-wave{
+  position:absolute;inset:0;opacity:.18;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,transparent 3px,
+      rgba(180,140,90,.4) 3px,rgba(180,140,90,.4) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,transparent 3px,
+      rgba(180,140,90,.3) 3px,rgba(180,140,90,.3) 4px
+    );
+}
+/* Filets colorés subtils (rouge, bleu) */
+.card-bg-lines{
+  position:absolute;inset:0;opacity:.07;
+  background-image:
+    repeating-linear-gradient(90deg,#c05050 0px,#c05050 .5px,transparent .5px,transparent 20px),
+    repeating-linear-gradient(0deg,#3050a0 0px,#3050a0 .5px,transparent .5px,transparent 25px);
+}
+/* Léger vignettage sur les bords */
+.card-bg-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 60%,rgba(180,130,70,.12) 100%);
+}
+
+/* ── Header carte ── */
+.card-header{
+  position:absolute;
+  top:22px;left:24px;right:24px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+}
+.card-title-text{
+  font-size:19px;font-weight:800;
+  color:#1a2a4a;letter-spacing:.04em;
+  text-transform:uppercase;
+}
+/* Script tibétain (simulé avec une police décorative dorée) */
+.tibetan-script{
+  text-align:right;
+  font-size:28px;line-height:1.1;
+  color:#c9a227;
+  font-weight:400;
+  text-shadow:0 1px 2px rgba(180,140,60,.3);
+}
+
+/* ── Photo ── */
+.card-photo{
+  position:absolute;
+  top:108px;left:24px;
+  width:165px;height:200px;
+  border-radius:6px;
+  overflow:hidden;
+  border:2px solid rgba(180,140,90,.4);
+  background:#d9c8aa;
+}
+.card-photo img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.card-photo-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:#d9c8aa;
+  color:#8a7455;font-size:3rem;
+}
+
+/* ── Signature ── */
+.card-signature{
+  position:absolute;
+  bottom:45px;left:24px;
+  width:155px;height:55px;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-signature img{max-width:140px;max-height:50px;object-fit:contain;filter:contrast(1.1)}
+.card-sig-placeholder{
+  font-family:'Dancing Script',cursive;
+  font-size:26px;font-weight:600;
+  color:#1a3070;opacity:.7;
+}
+
+/* ── Champs données ── */
+.card-fields{
+  position:absolute;
+  top:100px;left:210px;right:34px;
+}
+.card-field{margin-bottom:14px;position:relative}
+.cf-label{
+  font-size:12px;font-weight:500;
+  letter-spacing:0.02em;
+  color:#214478;letter-spacing:.01em;
+  margin-bottom:2px;display:block;
+}
+.cf-value{
+  font-size:22px;font-weight:700;
+  color:#4d4d4d;letter-spacing:-.01em;
+  line-height:1.2;
+}
+.cf-value.large{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:-0.02em;
+}
+.cf-value.id-num{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:0.08em;
+}
+.cf-value.dob{
+  font-size:28px;
+  font-weight:700;
+}
+/* Grille droite (nationalité + drapeau + sexe) */
+.card-right-col{
+
+  position:absolute;
+
+  top:240px;
+  left:554px;
+
+  width:180px;
+
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+
+  align-items:flex-start;
+}
+.card-nationality-block{margin-bottom:12px}
+.card-flag{
+  position:absolute;
+  bottom:85px;right:24px;
+  width:110px;height:82px;
+}
+.card-flag img{width:100%;height:100%;object-fit:contain}
+.card-flag-placeholder{
+  width:100%;height:100%;
+  border-radius:4px;overflow:hidden;
+  display:flex;flex-direction:column;
+  border:1px solid rgba(0,0,0,.15);
+}
+/* Drapeau tibétain simplifié */
+.tibet-flag{
+  width:100%;height:100%;
+  position:relative;overflow:hidden;border-radius:3px;
+}
+.flag-top{height:45%;background:linear-gradient(to right,#003893 50%,#ce1126 50%)}
+.flag-mid{height:10%;background:#fff}
+.flag-bot{height:45%;background:linear-gradient(to right,#ce1126 50%,#003893 50%)}
+
+.card-sex-block{
+  position:absolute;bottom:80px;right:145px;
+}
+.card-doc-num{
+  position:absolute;
+  bottom:22px;right:0px;
+  font-family:'Courier Prime',monospace;
+  font-size:22px;font-weight:700;color:#555;
+  letter-spacing:.04em;
+  background: #ffffff;
+  padding: 5px 50px;
+  bottom: 8px;
+}
+
+/* ══════════════════════════════════
+   CARD BACK
+══════════════════════════════════ */
+.id-card-back{
+  width:1011px;
+  height:638px;
+  border-radius:18px;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);
+  font-family:'Inter',sans-serif;
+}
+
+/* Numéro vertical gauche */
+.back-vertical-num{
+  position: absolute;
+  top: 42%;
+  left: -155px;
+  transform: translateY(-250%) rotate(-90deg);
+  font-family: 'Courier Prime',monospace;
+  font-size: 27px;
+  color: #888;
+  letter-spacing: .12em;
+  white-space: nowrap;
+  transform-origin: center center;
+}
+
+/* Tibétain gauche */
+.back-tibetan{
+  position:absolute;
+  top:25px;left:40px;
+  font-size:52px;
+  color:#c9a227;
+  line-height:1;opacity:.9;
+}
+
+/* Données centre */
+.back-data{
+  position:absolute;
+  top:100px;left:250px;right:250px;
+}
+.back-field{margin-bottom:18px}
+.back-label{font-size:11px;color:#214478;margin-bottom:3px;display:block}
+.back-value{font-size:28px;font-weight:700;color:#4d4d4d}
+.back-place{font-size:16px;color:#3a5080;margin-top:8px}
+
+/* Emblème */
+.back-emblem{
+  position:absolute;
+  top:35px;right:24px;
+  width:130px;height:130px;
+  border-radius:50%;
+  border:3px solid #c9a227;
+  background:linear-gradient(135deg,#f8f0e0,#ede0c0);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.back-emblem-inner{
+  width:120px;height:120px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 40% 35%,#e8f4ff,#c0d8f0 40%,#a0c0e8 100%);
+  font-size:3.5rem;
+}
+
+/* Bandes MRZ */
+.back-mrz-bar{
+  position:absolute;
+  bottom:145px;left:200px;right:0;
+  height:18px;display:flex;
+}
+.mrz-bar-blue{flex:0 0 46%;background:#1a2a5a;height:100%}
+.mrz-bar-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:12px;font-weight:700;color:#1a2a5a;letter-spacing:.15em;
+}
+.mrz-bar-red{flex:0 0 54%;background:#c82030;height:100%}
+
+/* Zone MRZ */
+.back-mrz{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:200px;
+  background:#fff;
+  border-top:0px solid #ccc;
+  padding:35px 20px;
+}
+.mrz-line{
+  font-family:'Courier Prime',monospace;
+  font-size:32px;font-weight:700;
+  color:#1a1a2a;letter-spacing:.06em;
+  line-height:1.4;
+}
+
+/* ══════════════════════════════════
+   TOAST / NOTIFICATIONS
+══════════════════════════════════ */
+.toast-container{
+  position:fixed;bottom:2rem;right:2rem;
+  display:flex;flex-direction:column;gap:.5rem;
+  z-index:9999;
+}
+.toast{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:.75rem 1.1rem;
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.82rem;font-weight:500;color:var(--text);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  animation:toastIn .3s ease;
+  min-width:240px;
+}
+.toast.success{border-color:var(--success)}
+.toast.error{border-color:#e05252}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:1100px){
+  .app-layout{grid-template-columns:340px 1fr}
+}
+@media(max-width:800px){
+  .app-layout{grid-template-columns:1fr}
+  .form-panel{max-height:none;position:static;border-right:none;border-bottom:1px solid var(--border)}
+}
+
+
+.card-wrapper{
+  transform-origin: top center;
+  transition: transform .25s ease;
+  display:flex;
+  justify-content:center;
+  width:100%;
+  position:relative;
+}
+.preview-panel{
+  overflow:auto;
+}
+
+.preview-panel{
+  align-items:center;
+}
+
+
+@media print {
+
+  body{
+    margin:0;
+    padding:0;
+    background:white;
+  }
+
+  .id-card,
+  .id-card-back{
+    width:85.6mm;
+    height:53.98mm;
+    box-shadow:none;
+  }
+
+}

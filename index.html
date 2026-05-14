@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tibet ID Card Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="css/style.css"  rel="stylesheet">
+
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="app-header">
+  <div class="app-title">
+    <div class="logo">🏔</div>
+    <div>
+      <h1>Tibet ID Card Generator by Raphaël</h1>
+      <p>Create & export official-style ID cards</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="resetForm()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.34"/></svg>
+      Reset
+    </button>
+    <button class="btn btn-secondary" onclick="exportCard('front')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Front
+    </button>
+    <button class="btn btn-primary" onclick="exportCard('back')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Back
+    </button>
+    <button class="btn btn-success" onclick="exportBoth()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+      Export Both
+    </button>
+
+    
+  </div>
+</header>
+
+<!-- ══ LAYOUT ══ -->
+<div class="app-layout">
+
+  <!-- ══════════ FORM PANEL ══════════ -->
+  <aside class="form-panel">
+
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab('personal')">Personal Info</button>
+      <button class="panel-tab" onclick="switchTab('card')">Card Details</button>
+      <button class="panel-tab" onclick="switchTab('media')">Photo & Sign.</button>
+    </div>
+
+    <!-- TAB 1 : Personal Info -->
+    <div class="form-section active" id="tab-personal">
+      <div class="divider-title">Identity</div>
+
+      <div class="field-group">
+        <label class="field-label">Full Username / Display Name</label>
+        <input class="field-input" id="f-username" type="text"
+               placeholder="Ngawang Thupten Jigme Gyatso "
+               value="Ngawang Thupten Jigme Gyatso "
+               oninput="update()">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">First Name</label>
+          <input class="field-input" id="f-firstname" type="text"
+                 placeholder="Ngawang" value="Ngawang" oninput="update()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Middle Name</label>
+          <input class="field-input" id="f-middlename" type="text"
+                 placeholder="Thupten" value="Thupten" oninput="update()">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Last Name / Family Name</label>
+        <input class="field-input" id="f-lastname" type="text"
+               placeholder="Jigme" value="Jigme" oninput="update()">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Date of Birth</label>
+          <input class="field-input" id="f-dob" type="text"
+                 placeholder="15.11.1955" value="15.11.1955" oninput="update()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Sex</label>
+          <select class="field-select" id="f-sex" onchange="update()">
+            <option value="M">M</option>
+            <option value="F">F</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Place of Birth</label>
+        <input class="field-input" id="f-pob" type="text"
+               placeholder="Gyantse-Samade, TIBET"
+               value="Gyantse-Samade, TIBET" oninput="update()">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Nationality</label>
+        <input class="field-input" id="f-nationality" type="text"
+               placeholder="TIBET" value="TIBET" oninput="update()">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Height (m)</label>
+        <input class="field-input" id="f-height" type="text"
+               placeholder="1.68 m" value="1.68 m" oninput="update()">
+      </div>
+    </div>
+
+    <!-- TAB 2 : Card Details -->
+    <div class="form-section" id="tab-card">
+      <div class="divider-title">Card Numbers</div>
+
+      <div class="field-group">
+        <label class="field-label">ID Number</label>
+        <input class="field-input" id="f-idnum" type="text"
+               placeholder="1234 4567 8900 1100"
+               value="1234 4567 8900 1100" oninput="update()">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+
+          <label class="field-label">Document Number</label>
+          <input class="field-input" id="f-docnum" type="text"
+                 placeholder="AA1234567" value="AA1234567" oninput="update()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Expiry Date</label>
+          <input class="field-input" id="f-expiry" type="text"
+                 placeholder="20.01.2028" value="20.01.2028" oninput="update()">
+        </div>
+      </div>
+
+      <div class="divider-title" style="margin-top:.5rem">MRZ Zone (Back)</div>
+
+      <div class="field-group">
+        <label class="field-label">MRZ Line 1 (Document code)</label>
+        <input class="field-input" id="f-mrz1" type="text"
+               placeholder="IDTIBX4RTBPFW46&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"
+               value="IDTIBX4RTBPFW46<<<<<<<<<<<<<<<<<"
+               style="font-family:'Courier Prime',monospace;font-size:.8rem;"
+               oninput="update()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">MRZ Line 2 (Name)</label>
+        <input class="field-input" id="f-mrz2" type="text"
+               placeholder="&lt;SHARLEY&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;Lhakpa &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"
+               value="<SHARLEY<<<<<<<<<<<<Lhakpa <<<<<<<<"
+               style="font-family:'Courier Prime',monospace;font-size:.8rem;"
+               oninput="update()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">MRZ Line 3 (Surname)</label>
+        <input class="field-input" id="f-mrz3" type="text"
+               placeholder="Tséring&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;"
+               value="Tséring<<<<<<<<<<<<<<<<<<<<<<<<<<"
+               style="font-family:'Courier Prime',monospace;font-size:.8rem;"
+               oninput="update()">
+      </div>
+
+      <div class="divider-title" style="margin-top:.5rem">Card Title</div>
+      <div class="field-group">
+        <label class="field-label">Card Title Text</label>
+        <input class="field-input" id="f-cardtitle" type="text"
+               placeholder="ID CARD TIBET" value="ID CARD TIBET" oninput="update()">
+      </div>
+    </div>
+
+    <!-- TAB 3 : Media -->
+    <div class="form-section" id="tab-media">
+      <div class="divider-title">Identity Photo</div>
+      <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+        <div class="photo-upload" id="photo-upload-btn" onclick="triggerPhotoUpload()">
+          <input type="file" id="photo-input" accept="image/*" onchange="loadPhoto(event)" style="display:none">
+          <div id="photo-preview-wrap">
+            <div class="photo-placeholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Upload photo</span>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <p style="font-size:.78rem;color:var(--text2);line-height:1.6;margin-bottom:.75rem">
+            Upload a portrait photo.<br>
+            <strong style="color:var(--text)">Recommended:</strong> 3×4 cm, white background, face clearly visible.
+          </p>
+          <button class="btn btn-secondary btn-sm" onclick="clearPhoto()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Remove photo
+          </button>
+        </div>
+      </div>
+
+      <div class="divider-title">Signature</div>
+      <div class="field-group">
+        <label class="field-label">Upload Signature Image</label>
+        <div class="sig-upload" id="sig-upload-btn" onclick="triggerSigUpload()">
+          <input type="file" id="sig-input" accept="image/*" onchange="loadSignature(event)" style="display:none">
+          <div id="sig-preview-wrap">
+            <span style="font-size:.75rem;color:var(--text2)">+ Click to upload signature</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom:1rem">
+        <label class="field-label">Or type name as signature</label>
+        <input class="field-input" id="f-sig-text" type="text"
+               placeholder="Lhakpa T"
+               value="Lhakpa T"
+               oninput="update()">
+        <p style="font-size:.7rem;color:var(--text2);margin-top:.4rem">Used as fallback if no image is uploaded</p>
+      </div>
+
+      <button class="btn btn-danger btn-sm" onclick="clearSignature()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Remove signature
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════ PREVIEW PANEL ══════════ -->
+  <main class="preview-panel" id="preview-panel">
+
+    <!-- Contrôles zoom -->
+    <div class="preview-controls">
+      <button class="zoom-btn" onclick="changeZoom(-0.1)">−</button>
+      <span class="zoom-label" id="zoom-display">65%</span>
+      <button class="zoom-btn" onclick="changeZoom(0.1)">+</button>
+      <span style="width:1px;height:14px;background:var(--border)"></span>
+      <span class="preview-label">Live Preview</span>
+      <button class="btn btn-secondary btn-sm" onclick="fitZoom()">ADJUST</button>
+    </div>
+
+    <!-- RECTO -->
+    <div>
+      <div class="card-container-label">▸ FRONT — Recto</div>
+      <div class="card-wrapper" id="card-front-wrapper">
+        <div class="id-card" id="card-front">
+          <!-- Fond sécurité -->
+          <div class="card-bg-security"></div>
+          <div class="card-bg-wave"></div>
+          <div class="card-bg-lines"></div>
+          <div class="card-bg-vignette"></div>
+
+          <!-- Header -->
+          <div class="card-header">
+            <div class="card-title-text" id="c-title">ID CARD TIBET</div>
+            <!--div class="tibetan-script">ཚེ་རིང་</div-->
+            
+          </div>
+          <img src="assets/text.png" style="position: absolute;
+          width: 250px;
+          right: 36px;
+          top: 55px;opacity: 0.8;z-index: 99;">
+
+          <!-- Photo -->
+          <div class="card-photo" id="card-photo">
+            <div class="card-photo-placeholder" id="photo-placeholder">4X4</div>
+          </div>
+
+          <!-- Signature -->
+          <div class="card-signature" id="card-signature">
+            <div class="card-sig-placeholder" id="sig-placeholder">Lhakpa T</div>
+          </div>
+
+          <!-- Champs -->
+          <div class="card-fields">
+            <div class="card-field">
+              <span class="cf-label">Username</span>
+              <span class="cf-value large" id="c-username">Sharley Lhakpa tséring</span>
+            </div>
+            <div class="card-field">
+              <span class="cf-label">Id number</span>
+              <span class="cf-value id-num" id="c-idnum">1234 4567 8900 1100</span>
+            </div>
+            <div class="card-field">
+              <span class="cf-label">Date of birth</span>
+              <span class="cf-value dob" id="c-dob">15.11.1955</span>
+            </div>
+            <div class="card-field">
+              <span class="cf-label">Place of birth</span>
+              <span class="cf-value" id="c-pob">Gyantse-Samade,<br>TIBET</span>
+            </div>
+            <div class="card-field">
+              <span class="cf-label">Expiry date</span>
+              <span class="cf-value dob" id="c-expiry">20.01.2028</span>
+            </div>
+          </div>
+
+          <!-- Colonne droite -->
+          <!-- Right column -->
+
+
+          
+          <img src="assets/flag.png" style="position: absolute;
+          width: 513px;
+          right: -96px;
+          bottom: 15px;opacity: 0.5;">
+          <div class="card-right-col">
+
+            <div class="card-info-block">
+              <span class="cf-label">Nationality</span>
+              <span class="cf-value" id="c-nationality">TIBET</span>
+            </div>
+
+            <div class="card-info-block">
+              <span class="cf-label">Sex</span>
+              <span class="cf-value" id="c-sex">M</span>
+            </div>
+
+          </div>
+
+          <!-- Numéro document -->
+          <div class="card-doc-num" id="c-docnum">AA1234567</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERSO -->
+    <div>
+      <div class="card-container-label">▸ BACK — Verso</div>
+      <div class="card-wrapper" id="card-back-wrapper">
+        <div class="id-card-back" id="card-back">
+          <!-- Fond sécurité -->
+          <div class="card-bg-security"></div>
+          <div class="card-bg-wave"></div>
+          <div class="card-bg-lines"></div>
+          <div class="card-bg-vignette"></div>
+
+          <!-- Numéro vertical -->
+          <div class="back-vertical-num" id="b-vertnum">1234 4567 8900 1100</div>
+
+          <!-- Tibétain -->
+          <div class="back-tibetan"></div>
+          <img src="assets/text.png" style="position: absolute;
+          width: 165px;
+          left: 65px;
+          top: 105px;
+          opacity: 1;">
+          <!-- Données -->
+          <div class="back-data">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1rem">
+              <div class="back-field">
+                <span class="back-label">Height</span>
+                <span class="back-value" id="b-height">1.68 m</span>
+              </div>
+              <div class="back-field">
+                <span class="back-label">Date of birth</span>
+                <span class="back-value" id="b-dob">15.11.1955</span>
+              </div>
+            </div>
+            <div class="back-place" id="b-pob">Gyantse-Samade, TIBET</div>
+          </div>
+
+          <!-- Emblème -->
+          <!--div class="back-emblem">
+            <div class="back-emblem-innerr"></div>
+          </div-->
+
+          
+
+          <!-- Bandes MRZ couleur -->
+          <div style="position:absolute;bottom:200px;left:0px;right:0;height:22px;display:flex;align-items:center">
+            <div style="flex:0 0 44%;background:#1a2a5a;height:100%"></div>
+            <div style="font-size:13px;font-weight:700;color:#1a2a5a;padding:0 14px;white-space:nowrap" id="b-nation-label">TIBET</div>
+            <div style="flex:1;background:#c82030;height:100%"></div>
+          </div>
+          <img src="assets/back.png" style="position: absolute;
+          width: 180px;
+          right: 96px;
+          top: 95px;opacity: 0.7;">
+          <!-- Zone MRZ -->
+          <div class="back-mrz">
+            <div class="mrz-line" id="b-mrz1">IDTIBX4RTBPFW46&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+            <div class="mrz-line" id="b-mrz2">&lt;Ngawang &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;Thupten  &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+            <div class="mrz-line" id="b-mrz3">Jigme &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;Gyatso</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
