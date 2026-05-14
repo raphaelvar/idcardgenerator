@@ -260,7 +260,7 @@ function clearSignature() {
   document.getElementById('sig-preview-wrap').innerHTML =
     `<span style="font-size:.75rem;color:var(--text2)">+ Click to upload signature</span>`;
   document.getElementById('card-signature').innerHTML =
-    `<div class="card-sig-placeholder" id="sig-placeholder">${v('f-sig-text') || 'Lhakpa T'}</div>`;
+    `<div class="card-sig-placeholder" id="sig-placeholder">${v('f-sig-text') || 'Signature'}</div>`;
   document.getElementById('sig-input').value = '';
   toast('Signature removed', 'success');
 }
