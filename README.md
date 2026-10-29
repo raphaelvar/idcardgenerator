@@ -1,2 +1,2 @@
 # idcardgenerator
-Tibetan Fake Id Card Generator
+USA Fake Id Card Generator
